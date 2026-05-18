@@ -18,3 +18,48 @@ model User {
   email String  @unique
   name  String?
 }
+
+model Candidate {
+  id              Int              @id @default(autoincrement())
+  firstName       String           @db.VarChar(80)
+  lastName        String           @db.VarChar(80)
+  email           String           @unique @db.VarChar(254)
+  phone           String           @db.VarChar(30)
+  address         String           @db.VarChar(255)
+  cvFileName      String           @db.VarChar(255)
+  cvOriginalName  String           @db.VarChar(255)
+  cvMimeType      String           @db.VarChar(100)
+  cvSize          Int
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  educations      Education[]
+  workExperiences WorkExperience[]
+
+  @@index([lastName, firstName])
+}
+
+model Education {
+  id           Int       @id @default(autoincrement())
+  candidateId  Int
+  institution  String    @db.VarChar(150)
+  degree       String    @db.VarChar(150)
+  fieldOfStudy String?   @db.VarChar(150)
+  startDate    DateTime  @db.Date
+  endDate      DateTime? @db.Date
+  candidate    Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+}
+
+model WorkExperience {
+  id          Int       @id @default(autoincrement())
+  candidateId Int
+  company     String    @db.VarChar(150)
+  position    String    @db.VarChar(150)
+  description String?   @db.VarChar(2000)
+  startDate   DateTime  @db.Date
+  endDate     DateTime? @db.Date
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@index([candidateId])
+}

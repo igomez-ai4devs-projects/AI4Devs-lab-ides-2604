@@ -16,6 +16,9 @@
 **/build
 **/dist
 
+# uploads (CVs subidos por el endpoint de candidatos)
+backend/uploads/
+
 # logs
 npm-debug.log*
 yarn-debug.log*
