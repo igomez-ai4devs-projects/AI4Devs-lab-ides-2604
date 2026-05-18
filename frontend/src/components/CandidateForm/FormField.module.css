@@ -1,0 +1,33 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.label {
+  font-weight: 500;
+}
+.required {
+  color: #b52a1f;
+}
+.input {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #767676;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+.input:focus {
+  outline: 3px solid #4c9aff;
+  outline-offset: 1px;
+  border-color: #0052cc;
+}
+.inputError {
+  border-color: #b52a1f;
+}
+.error {
+  color: #b52a1f;
+  font-size: 0.875rem;
+}
