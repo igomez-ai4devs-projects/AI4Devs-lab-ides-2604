@@ -320,3 +320,29 @@ jest.config.js: testEnvironment: 'jsdom', setupFilesAfterEnv (no setupFilesAfter
 Frontend en :3000 (HTTP 200, <title>React App</title>). CORS preflight OPTIONS /api/candidates desde Origin: http://localhost:3000 → 204 con Access-Control-Allow-Origin: http://localhost:3000. POST cross-origin con multipart real → 201 con candidato completo, CORS headers OK. DB y uploads/cvs/ limpios.
 
 </br>
+
+## Prompt 8:
+
+Agent: Sonnet 4.6
+
+### Input:
+
+Sigue con Fase 4 (Integración y cierre)
+
+### Output:
+
+Cambios en esta fase:
+
+README.md — 3 secciones nuevas, espejadas EN/ES: Database migrations / Migraciones de base de datos — npx prisma migrate dev + npm run prisma:generate. Add Candidate feature / Funcionalidad: Añadir candidato — endpoint, campos, códigos de error, link a /api/docs, almacenamiento del CV, CORS, y la variable REACT_APP_API_BASE_URL. Tests — cómo correr backend (DB real) y frontend (fetch mockeado). Estado global de la HU "Añadir Candidato al Sistema":
+
+Criterio HU Cubierto en Estado
+
+1. Botón visible en dashboard TKT-3 ✅
+2. Formulario con 7 campos TKT-1 + TKT-2 + TKT-3 ✅
+3. Validación de datos TKT-2 (zod) + TKT-3 (useCandidateForm) ✅
+4. Subida CV PDF/DOCX TKT-1 (metadata) + TKT-2 (multer 5MB) + TKT-3 (CvUpload) ✅
+5. Mensaje de confirmación TKT-2 (201) + TKT-3 (<Alert role="status">) ✅
+6. Manejo de errores TKT-2 (error middleware) + TKT-3 (mapeo code → mensaje) ✅
+7. Accesibilidad y compat. multi-dispositivo TKT-3 (aria-\*, focus-visible, breakpoints 480/1024) ✅ Métricas:
+
+29/29 tests verdes (13 backend + 16 frontend). 1 migración Prisma versionada, 3 modelos nuevos. 1 endpoint REST + Swagger en /api/docs. Smoke E2E manual verificado (CORS preflight 204, POST 201, frontend renderiza).
