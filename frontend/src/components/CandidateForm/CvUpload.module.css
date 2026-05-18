@@ -1,0 +1,25 @@
+.cv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.label {
+  font-weight: 500;
+}
+.help {
+  font-size: 0.85rem;
+  color: #5f6368;
+}
+.fileInfo {
+  font-size: 0.9rem;
+  color: #137333;
+}
+.error {
+  color: #b52a1f;
+  font-size: 0.875rem;
+}
+.inputError {
+  outline: 1px solid #b52a1f;
+  border-radius: 4px;
+  padding: 2px;
+}

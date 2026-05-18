@@ -296,3 +296,27 @@ backend/package.json + package-lock.json — añadidas multer, zod, uuid (runtim
 backend/src/lib/prisma.ts — singleton PrismaClient. backend/src/utils/http-error.ts — HttpError con setPrototypeOf (ES5 target arrastra el bug clásico de extends Error). backend/src/validators/candidate.schema.ts — schemas zod para candidateInput, education, workExperience. backend/src/middlewares/upload.middleware.ts — multer con diskStorage, 5MB limit, MIME + extension filter, nombre uuid.ext. backend/src/middlewares/error.middleware.ts — mapea ZodError/MulterError/PrismaClientKnownRequestError P2002/HttpError → JSON { error: { code, message, details? } }; limpia archivo huérfano. backend/src/services/candidates.service.ts — create con nested writes para educations/workExperiences; rollback síncrono del CV ante fallo. backend/src/controllers/candidates.controller.ts — parsea JSON de educations/workExperiences, valida con zod, llama al service, devuelve 201. backend/src/routes/candidates.routes.ts — POST /candidates con uploadCv.single('cv') + JSDoc @openapi (request multipart, 201/400/409/413/500). backend/src/config/swagger.ts — setupSwagger(app) sirve UI en /api/docs. backend/src/tests/candidates.test.ts — 12 casos Supertest. Verificación:
 
 npm run build limpio (tsc strict). npm test: 13/13 verdes (12 candidates + 1 app). Hay un warning de "worker force exited" del Rust engine de Prisma — benigno, no afecta exit code. Smoke con curl.exe: POST /api/candidates → 201 con candidato completo (id, educations, workExperiences, metadata del CV). POST con mismo email → 409 EMAIL_ALREADY_EXISTS. GET /api/docs/ → 200 con HTML de Swagger UI. Limpieza: DB restaurada (COUNT = 0), CV huérfano borrado, dev server parado.
+
+</br>
+
+## Prompt 7:
+
+Agent: Sonnet 4.6
+
+### Input:
+
+Sigue con la Fase 3 (TKT-3 — Frontend)
+
+### Output:
+
+Frontend — 21 archivos nuevos:
+
+src/types/candidate.ts — tipos espejo del contrato API. src/services/candidatesApi.ts — createCandidate(input, cv) con FormData, ApiError con setPrototypeOf, manejo de network errors. src/hooks/useCandidateForm.ts — hook propio (sin librería), validación campo a campo + nested arrays + cv (extensión/tamaño). src/components/ui/ — Button, Alert (role=status/role=alert, aria-live). src/components/CandidateForm/ — FormField (label + aria-required/invalid/describedby), EducationList, WorkExperienceList (eliminar deshabilitado si solo queda 1), CvUpload (accept PDF/DOCX, aria-describedby con help+error), CandidateForm (ensambla todo). src/pages/ — DashboardPage, AddCandidatePage (estados idle/submitting/success/error, mapea códigos del backend a mensajes UX, "Añadir otro"). src/App.tsx — switch useState<'dashboard' | 'add'>. CSS modules mobile-first con focus-visible, contraste WCAG AA. Tests frontend — 16/16 verdes:
+
+App.test.tsx (2), CandidateForm.test.tsx (2), AddCandidatePage.test.tsx (9), candidatesApi.test.ts (3). Setup de Jest (correcciones que tuve que hacer):
+
+jest.config.js: testEnvironment: 'jsdom', setupFilesAfterEnv (no setupFilesAfterEach), moduleNameMapper para CSS modules → identity-obj-proxy, testRegex restrictivo a \*.test.tsx?. Deps nuevas (dev): ts-jest@^29, jest@^29, jest-environment-jsdom@^29 (para alinear con ts-jest 29), identity-obj-proxy, @testing-library/user-event@^14 (necesita setup()). Smoke E2E:
+
+Frontend en :3000 (HTTP 200, <title>React App</title>). CORS preflight OPTIONS /api/candidates desde Origin: http://localhost:3000 → 204 con Access-Control-Allow-Origin: http://localhost:3000. POST cross-origin con multipart real → 201 con candidato completo, CORS headers OK. DB y uploads/cvs/ limpios.
+
+</br>

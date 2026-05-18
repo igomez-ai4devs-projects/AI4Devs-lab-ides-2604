@@ -1,6 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import candidatesRouter from './routes/candidates.routes';
 import { errorHandler } from './middlewares/error.middleware';
@@ -15,6 +15,7 @@ export const app = express();
 
 const port = 3010;
 
+app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 app.get('/', (req, res) => {
