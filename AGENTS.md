@@ -1,13 +1,3 @@
-# Prompts
-
--> **_Prompt 1_**
-
-Agent: Sonnet 4.6
-
-¿puedes leer este proyecto "AI4Devs-lab-ides-2604" y crear un AGENTS.md?
-
-Claude Response:/
-
 # AGENTS.md
 
 Guía para agentes de IA (Claude Code, Codex, Cursor, etc.) que trabajen en este repositorio.
@@ -44,14 +34,12 @@ Estado actual: esqueleto inicial. El backend solo expone `GET /` ([backend/src/i
 Ejecútalos desde el directorio indicado.
 
 ### Base de datos (raíz del repo)
-
 ```sh
 docker-compose up -d     # Levanta PostgreSQL en :5432
 docker-compose down      # Detiene el contenedor
 ```
 
 ### Backend (`backend/`)
-
 ```sh
 npm install
 npm run dev              # ts-node-dev, recarga en cambios → :3010
@@ -62,7 +50,6 @@ npm run prisma:generate  # Regenera Prisma Client tras editar schema.prisma
 ```
 
 ### Frontend (`frontend/`)
-
 ```sh
 npm install
 npm start                # CRA dev server → :3000
