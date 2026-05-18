@@ -276,3 +276,23 @@ Fase 0 + Fase 1 completas. Estado:
 - Verificado en BD: 5 tablas (Candidate, Education, WorkExperience, User, \_prisma_migrations); índices y FKs correctos.
 
 Cambios pendientes de commit: .gitignore, backend/prisma/schema.prisma, backend/prisma/migrations/. También está modificado LTI-lab-ides-IGR/prompts-IGR.md (lab notes, no relacionado con TKT-1).
+
+</br>
+
+## Prompt 6:
+
+Agent: Sonnet 4.6
+
+### Input:
+
+Ya puedes seguir con la Fase 2 (TKT-2 - Backend)
+
+### Output:
+
+Cambios:
+
+backend/package.json + package-lock.json — añadidas multer, zod, uuid (runtime) + @types/multer, @types/uuid, @types/swagger-jsdoc, @types/swagger-ui-express (dev). backend/src/index.ts — refactor: importa prisma desde lib/, registra express.json(), monta candidatesRouter en /api, cablea Swagger en /api/docs, registra errorHandler global, hace mkdirSync(uploadsDir, { recursive: true }) al boot, y guarda app.listen tras NODE_ENV !== 'test'. backend/src/tests/app.test.ts — corregido ('Hello World!' → 'Hola LTI!') + afterAll con prisma.$disconnect(). Nuevos archivos:
+
+backend/src/lib/prisma.ts — singleton PrismaClient. backend/src/utils/http-error.ts — HttpError con setPrototypeOf (ES5 target arrastra el bug clásico de extends Error). backend/src/validators/candidate.schema.ts — schemas zod para candidateInput, education, workExperience. backend/src/middlewares/upload.middleware.ts — multer con diskStorage, 5MB limit, MIME + extension filter, nombre uuid.ext. backend/src/middlewares/error.middleware.ts — mapea ZodError/MulterError/PrismaClientKnownRequestError P2002/HttpError → JSON { error: { code, message, details? } }; limpia archivo huérfano. backend/src/services/candidates.service.ts — create con nested writes para educations/workExperiences; rollback síncrono del CV ante fallo. backend/src/controllers/candidates.controller.ts — parsea JSON de educations/workExperiences, valida con zod, llama al service, devuelve 201. backend/src/routes/candidates.routes.ts — POST /candidates con uploadCv.single('cv') + JSDoc @openapi (request multipart, 201/400/409/413/500). backend/src/config/swagger.ts — setupSwagger(app) sirve UI en /api/docs. backend/src/tests/candidates.test.ts — 12 casos Supertest. Verificación:
+
+npm run build limpio (tsc strict). npm test: 13/13 verdes (12 candidates + 1 app). Hay un warning de "worker force exited" del Rust engine de Prisma — benigno, no afecta exit code. Smoke con curl.exe: POST /api/candidates → 201 con candidato completo (id, educations, workExperiences, metadata del CV). POST con mismo email → 409 EMAIL_ALREADY_EXISTS. GET /api/docs/ → 200 con HTML de Swagger UI. Limpieza: DB restaurada (COUNT = 0), CV huérfano borrado, dev server parado.
